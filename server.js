@@ -1,19 +1,20 @@
-const mysql = require("mysql");
+let mysql = require("mysql");
 const inquirer = require("inquirer");
-require("console.table");
+const cTable = require('console.table');
 
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: "localhost",
-    port: 3000,
     user: "root",
-    password: "",
-    database: "employee_trackerDB"
+    password: "root000yes",
+    database: "employees"
 });
 
 // connect to mysql server
 connection.connect(function(err) {
-    if (err) throw err;
-    startPrompt();
+    if (err) {
+        return console.error('error: ' + err.message);
+    }
+    console.log("Connected to MySQL server.");
 });
 
 function startPrompt() {
