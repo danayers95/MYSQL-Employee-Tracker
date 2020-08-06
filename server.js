@@ -17,11 +17,12 @@ connection.connect(function(err) {
     console.log("Connected to MySQL server.");
 });
 
+// Initial prompt
 function startPrompt() {
     inquirer
       .prompt({
-          type: "list",
-          name: "task",
+          type: "rawlist",
+          name: "action",
           message: "What would you like to do?",
           choices: [
               "View Employees",
@@ -58,4 +59,13 @@ function startPrompt() {
                   break;
           }
       });
+}
+
+function listEmployee() {
+    const query = "SELECT * FROM employee";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.table(res);
+        startPrompt();
+    });
 }
