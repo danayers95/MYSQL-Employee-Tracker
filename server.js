@@ -69,3 +69,7 @@ function listEmployee() {
         startPrompt();
     });
 }
+
+// Make department for array
+
+function viewEmployeeByDepartment() {}
