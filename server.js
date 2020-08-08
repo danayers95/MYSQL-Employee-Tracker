@@ -68,39 +68,49 @@ function startPrompt() {
 
 // Make array to list all employees in one place
 function viewEmployee() {
-    const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager
-    FROM employee
-    LEFT JOIN employee manager on manager.id = employee.manager_id
-    INNER JOIN role ON (role.id = employee.role_id)
-    INNER JOIN department ON (department.id = role.department_id)
-    ORDER BY employee.id;`;
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        console.log('\n');
-        console.log('VIEW ALL EMPLOYEES');
-        console.log('\n');
-        console.table(res);
-        startPrompt();
+    const query =
+      "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name " +
+      "FROM employee " +
+      "INNER JOIN role " +
+      "ON employee.role_id=role.id " +
+      "INNER JOIN department " +
+      "ON role.department_id=department.id; ";
+    connection.query(query, function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startPrompt();
     });
-}
+  }
 
 // Make array to view employees by department 
 
 function viewEmployeeByDepartment() {
-    const query = `SELECT department.name AS department, role.title, employee.id, employee.first_name, employee.last_name
-    FROM employee
-    LEFT JOIN role ON (role.id = employee.role_id)
-    LEFT JOIN department ON (department.id = role.department_id)
-    ORDER BY department.name;`;
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        console.log('\n');
-        console.log('VIEW EMPLOYEE BY DEPARTMENT');
-        console.log('\n');
-        console.table(res);
-        startPrompt();
-    });
-}
+    inquirer
+      .prompt({
+        name: "department",
+        type: "list",
+        message: "What department's employees would you like to see?",
+        choices: ["Sales", "Engineering", "Finance", "Legal"],
+      })
+      .then(function (answer) {
+        const query =
+          "SELECT employee.first_name, employee.last_name " +
+          "FROM employee " +
+          "INNER JOIN role " +
+          "ON employee.role_id=role.id " +
+          "INNER JOIN department " +
+          "ON role.department_id=department.id " +
+          "WHERE department.name='" +
+          answer.department +
+          "';";
+        connection.query(query, function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          startPrompt();
+        });
+      });
+  }
+  
 
 function viewByManager() {
     const query = `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.id, employee.first_name, employee.last_name, role.title
