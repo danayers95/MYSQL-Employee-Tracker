@@ -17,13 +17,18 @@
 ---
 
 ## Description:
+This quick and easy application makes it easy for non-developers to view and interact with information stored in databases. Using node, inquirer, and MySQL, a user can easily view and alter employee information in the database. 
  
 
 ## Installation:
+* npm i - installs all files needed
+* npm init - creates json file for application
+* npm i mysql - connects to MySQL database
+* npm console.table - formats tables
 
 
 ## Usage:
-
+* Just run "node server.js" to get the application under way!
 
 ## License:
 
@@ -35,7 +40,7 @@ MIT License: A short and simple permissive license with conditions only requirin
 
 
 ## Contributing 
-
+All contributions welcome
 ## Tests
 
 ## Questions
