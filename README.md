@@ -21,7 +21,7 @@ This quick and easy application makes it easy for non-developers to view and int
 
 Screenshots demonstrating the applications functionality can be found in the assets folder. 
 
-A link to a google drive folder containing a video walkthrough of the application can be found [here](https://drive.google.com/drive/folders/1U2c945qtwSyVU5fRqK7TLZvGl_hM3UcG)
+A link to a google drive folder containing a video walkthrough of the application can be found [here](https://drive.google.com/drive/folders/1U2c945qtwSyVU5fRqK7TLZvGl_hM3UcG).
  
 
 ## Installation:
