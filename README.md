@@ -20,6 +20,8 @@
 This quick and easy application makes it easy for non-developers to view and interact with information stored in databases. Using node, inquirer, and MySQL, a user can easily view and alter employee information in the database. 
 
 Screenshots demonstrating the applications functionality can be found in the assets folder. 
+
+A link to a google drive folder containing a video walkthrough of the application can be found [here] (https://drive.google.com/drive/folders/1U2c945qtwSyVU5fRqK7TLZvGl_hM3UcG)
  
 
 ## Installation:
