@@ -133,6 +133,7 @@ function viewByManager() {
     });
 }
 
+
 function viewAllRoles() {
     const query = `SELECT role.title, employee.id, employee.first_name, employee.last_name, department.name AS department
     FROM employee
@@ -392,6 +393,6 @@ function askName() {
     ]);
 } */
 
+// function to remove an employee
 function removeEmployee() {}
 
-function viewAllRoles() {}
