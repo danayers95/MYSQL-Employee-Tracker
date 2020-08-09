@@ -71,6 +71,7 @@ function startPrompt() {
 }
 
 // Make array to list all employees in one place
+
 function viewEmployee() {
     const query =
       "SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name " +
@@ -115,6 +116,8 @@ function viewEmployeeByDepartment() {
       });
 }
 
+// add a new department
+
 function addDepartment() {
     inquirer
       .prompt({
@@ -124,7 +127,7 @@ function addDepartment() {
       })
       .then(function (answer) {
           connection.query(
-              "INSERT INTO departments SET ?",
+              "INSERT INTO department SET ?",
               {
                   name: answer.department,
               },
@@ -139,7 +142,7 @@ function addDepartment() {
 
 
   
-
+// function to view employees by specific managers
 function viewByManager() {
     const query = /* `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.id, employee.first_name, employee.last_name, role.title
     FROM employee
@@ -161,7 +164,7 @@ function viewByManager() {
     });
 }
 
-
+// view all employee roles
 function viewAllRoles() {
     const query = `SELECT role.title, employee.id, employee.first_name, employee.last_name, department.name AS department
     FROM employee
@@ -223,6 +226,7 @@ function addEmployee() {
     });
 }
 
+// function to remove an employee from a database
 function removeEmployee() {
     connection.query("SELECT * FROM employee", (err, res) => {
         if (err) throw err;
