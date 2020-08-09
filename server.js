@@ -28,13 +28,14 @@ function startPrompt() {
               "View Employees by Manager",
               "View All Employee Roles",
               "Add Employee",
+              "Add a Department",
               "Remove Employee",
               "Update Employee Information",
               "Exit"
           ],
       })
-      .then(function ({ task }) {
-          switch (task) {
+      .then(function (answer) {
+          switch (answer.action) {
               case "View Employees":
                   viewEmployee();
                   break;
@@ -49,6 +50,9 @@ function startPrompt() {
                   break;
               case "Add Employee":
                   addEmployee();
+                  break;
+              case "Add a Department":
+                  addDepartment();
                   break;
               case "Remove Employee":
                   removeEmployee();
@@ -109,7 +113,31 @@ function viewEmployeeByDepartment() {
           startPrompt();
         });
       });
-  }
+}
+
+function addDepartment() {
+    inquirer
+      prompt({
+          name: "department",
+          type: "input",
+          message: "Enter the name of the new department:",
+      })
+      .then(function (answer) {
+          connection.query(
+              "INSERT INTO departments SET ?",
+              {
+                  name: answer.department,
+              },
+              function (err) {
+                  if (err) throw err;
+                  console.log("Data added successfully");
+                  startPrompt();
+              }
+          );
+      });
+}
+
+
   
 
 function viewByManager() {
@@ -152,88 +180,37 @@ function viewAllRoles() {
 
 
 // Add employee function
-async function addEmployee() {
-    inquirer
-      .prompt([
-          {
-              name: "newEmployeeFirstName",
-              type: "input",
-              message: "Enter employee's first name ",
-              default: "enter first name",
-          },
-          {
-              name: "newEmployeeLastName",
-              type: "input",
-              message: "Enter the employee's last name ",
-              default: "enter last name",
-          },
-          {
-              name: "jobTitle",
-              type: "list",
-              message: "Enter the employee's job title ",
-              choices: [
-                  "Enter a new job title",
-                  "Salesperson",
-                  "Sales Manager",
-                  "Marketing Analyst",
-                  "Marketing Director",
-                  "Lead Engineer",
-                  "Software Engineer",
-                  "Accountant",
-                  "Paralegal",
-                  "Lawyer",
-              ],
-          },
-          {
-              name: "newJobTitle",
-              type: "input",
-              message: "Enter the new job title",
-              default: "enter the new job title",
-              when: (answers) => answers.jobTitle === "Enter a new job title",
-          },
-          {
-              name: "managerQues",
-              type: "list",
-              message: "Does the new employee work under a manger?",
-              choices: ["yes", "no"],
-          },
-          {
-              name: "newEmMan",
-              type: "list",
-              message: "Select the manager: ",
-              choices: [
-                  "John Doe",
-                  "Ashley Rodriguez",
-                  "Kunal Singh",
-                  "Sarah Lourd",
-                  "Mike Chan",
-                  "Kevin Tupik",
-                  "Malia Brown",
-                  "Tom Allen",
-              ],
-              when: (answers) => answers.managerQues === "yes",
-          },
-          {
-              name: "salary",
-              type: "number",
-              message: "Enter the salary for the new employee",
-              default: "enter salary",
-          },
-      ])
-      .then(function (answer) {
-          const query = 
-            "INSERT INTO employee (first_name, last_name) " +
-            "VALUES ('" +
-            answer.newEmployeeFirstName +
-            "','" +
-            answer.newEmployeeLastName +
-            "'); ";
-          connection.query(query, function (err, res) {
-              if (err) throw err;
-              console.table(res);
-              startPrompt();
-          });
-      });
+function addEmployee() {
+    connection.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        inquirer
+          prompt([
+              {
+                  name: "firstName",
+                  type: "input",
+                  message: "Enter employee's first name: ",
+              },
+              {
+                  name: "lastName", 
+                  type: "input",
+                  message: "Enter the employee's last name: ",
+              },
+              {
+                  name: "role",
+                  type: "list",
+                  message: "What is the role of the employee?",
+                  choices: () => res.map((res) => res.title),
+              },
+          ])
+          .then((answers) => {
+              answers.role = res.filter(
+                  (res) => res.title === answers.role
+              )[0].id;
+              connection.query(
+                  "INSERT INTO employee SET ?"
+              )
+          })
+    })
 }
     /* const addName = await inquirer.prompt(askName());
     connection.query('SELECT role.id, role.title FROM role ORDER BY role.id;', async (err, res) => {
