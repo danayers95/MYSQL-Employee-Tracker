@@ -298,7 +298,7 @@ async function addEmployee() {
     });
 }*/
 
-function remove(input) {
+/* function remove(input) {
     const promptQ = {
         yes: "yes",
         no: "no",
@@ -390,4 +390,8 @@ function askName() {
             message: "Enter last name "
         }
     ]);
-}
+} */
+
+function removeEmployee() {}
+
+function viewAllRoles() {}
