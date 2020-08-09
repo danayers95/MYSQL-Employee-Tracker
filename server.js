@@ -117,7 +117,7 @@ function viewEmployeeByDepartment() {
 
 function addDepartment() {
     inquirer
-      prompt({
+      .prompt({
           name: "department",
           type: "input",
           message: "Enter the name of the new department:",
@@ -184,7 +184,7 @@ function addEmployee() {
     connection.query("SELECT * FROM role", (err, res) => {
         if (err) throw err;
         inquirer
-          prompt([
+          .prompt([
               {
                   name: "firstName",
                   type: "input",
@@ -207,10 +207,55 @@ function addEmployee() {
                   (res) => res.title === answers.role
               )[0].id;
               connection.query(
-                  "INSERT INTO employee SET ?"
-              )
+                  "INSERT INTO employee SET ?",
+                  {
+                      first_name: answers.firstName,
+                      last_name: answers.lastName,
+                      role_id: answers.role,
+                  },
+                  (err) => {
+                      if (err) throw err;
+                      console.log("Data added successfully!");
+                      startPrompt();
+                  }
+              );
+          });
+    });
+}
+
+function removeEmployee() {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        inquirer
+          .prompt({
+              name: "employee",
+              type: "list",
+              message: "Which employee would you like to remove?",
+              choices: () =>
+                res.map(
+                    (res) => res.first_name + " " + res.last_name
+                ),
           })
-    })
+          .then((answer) => {
+              let employeeId = res.filter(
+                  (res) =>
+                    res.first_name + " " + res.last_name === answer.employee
+              )[0].id;
+
+              console.log("employeeID: ", employeeId);
+              console.log(answer.employee);
+
+              connection.query(`DELETE FROM employee WHERE ? `, {
+                  id: employeeId,
+              });
+              console.log(
+                  "Successfully removed " +
+                    answer.employee +
+                    " from employee database"
+              );
+              startPrompt();
+          });
+    });
 }
     /* const addName = await inquirer.prompt(askName());
     connection.query('SELECT role.id, role.title FROM role ORDER BY role.id;', async (err, res) => {
@@ -370,6 +415,5 @@ function askName() {
     ]);
 } */
 
-// function to remove an employee
-function removeEmployee() {}
+
 
