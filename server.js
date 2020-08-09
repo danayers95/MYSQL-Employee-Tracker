@@ -89,7 +89,7 @@ function viewEmployeeByDepartment() {
       .prompt({
         name: "department",
         type: "list",
-        message: "What department's employees would you like to see?",
+        message: "Which department would you like to look into?",
         choices: ["Sales", "Engineering", "Finance", "Legal"],
       })
       .then(function (answer) {
@@ -113,17 +113,21 @@ function viewEmployeeByDepartment() {
   
 
 function viewByManager() {
-    const query = `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.id, employee.first_name, employee.last_name, role.title
+    const query = /* `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, department.name AS department, employee.id, employee.first_name, employee.last_name, role.title
     FROM employee
     LEFT JOIN employee manager on manager.id = employee.manager_id
     INNER JOIN role ON (role.id = employee.role_id && employee.manager_id != 'NULL')
     INNER JOIN department ON (department.id = role.department_id)
-    ORDER BY manager;`;
+    ORDER BY manager;`; */
+        "SELECT A.last_name AS ManagerLastName, " +
+        "B.first_name AS EmployeeName, B.last_name " +
+        "FROM employee A, employee B " +
+        "WHERE A.role_id=B.manager_id;";
     connection.query(query, (err, res) => {
         if (err) throw err;
-        console.log('\n');
+        /* console.log('\n');
         console.log('VIEW EMPLOYEE BY MANAGER');
-        console.log('\n');
+        console.log('\n'); */
         console.table(res);
         startPrompt();
     });
@@ -148,7 +152,89 @@ function viewAllRoles() {
 
 // Add employee function
 async function addEmployee() {
-    const addName = await inquirer.prompt(askName());
+    inquirer
+      .prompt([
+          {
+              name: "newEmployeeFirstName",
+              type: "input",
+              message: "Enter employee's first name ",
+              default: "enter first name",
+          },
+          {
+              name: "newEmployeeLastName",
+              type: "input",
+              message: "Enter the employee's last name ",
+              default: "enter last name",
+          },
+          {
+              name: "jobTitle",
+              type: "list",
+              message: "Enter the employee's job title ",
+              choices: [
+                  "Enter a new job title",
+                  "Salesperson",
+                  "Sales Manager",
+                  "Marketing Analyst",
+                  "Marketing Director",
+                  "Lead Engineer",
+                  "Software Engineer",
+                  "Accountant",
+                  "Paralegal",
+                  "Lawyer",
+              ],
+          },
+          {
+              name: "newJobTitle",
+              type: "input",
+              message: "Enter the new job title",
+              default: "enter the new job title",
+              when: (answers) => answers.jobTitle === "Enter a new job title",
+          },
+          {
+              name: "managerQues",
+              type: "list",
+              message: "Does the new employee work under a manger?",
+              choices: ["yes", "no"],
+          },
+          {
+              name: "newEmMan",
+              type: "list",
+              message: "Select the manager: ",
+              choices: [
+                  "John Doe",
+                  "Ashley Rodriguez",
+                  "Kunal Singh",
+                  "Sarah Lourd",
+                  "Mike Chan",
+                  "Kevin Tupik",
+                  "Malia Brown",
+                  "Tom Allen",
+              ],
+              when: (answers) => answers.managerQues === "yes",
+          },
+          {
+              name: "salary",
+              type: "number",
+              message: "Enter the salary for the new employee",
+              default: "enter salary",
+          },
+      ])
+      .then(function (answer) {
+          const query = 
+            "INSERT INTO employee (first_name, last_name) " +
+            "VALUES ('" +
+            answer.newEmployeeFirstName +
+            "','" +
+            answer.newEmployeeLastName +
+            "'); ";
+          connection.query(query, function (err, res) {
+              if (err) throw err;
+              console.table(res);
+              startPrompt();
+          });
+      });
+}
+    /* const addName = await inquirer.prompt(askName());
     connection.query('SELECT role.id, role.title FROM role ORDER BY role.id;', async (err, res) => {
         if (err) throw err;
         const { role } = await inquirer.prompt([
@@ -210,7 +296,7 @@ async function addEmployee() {
             );
         });
     });
-}
+}*/
 
 function remove(input) {
     const promptQ = {
